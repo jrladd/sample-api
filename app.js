@@ -1,7 +1,10 @@
 const express = require('express')
+const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose();
 const app = express()
 const port = 3000
+
+app.use(cors());
 
 // Connect to the SQLite database
 const db = new sqlite3.Database('./db/test.db', (err) => {
