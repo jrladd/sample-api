@@ -2,9 +2,11 @@ const express = require('express')
 const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose();
 const app = express()
-const port = 3000
+const port = 8080
 
+app.use(express.json())
 app.use(cors());
+
 
 // Connect to the SQLite database
 const db = new sqlite3.Database('./db/test.db', (err) => {
@@ -17,6 +19,7 @@ const db = new sqlite3.Database('./db/test.db', (err) => {
 
 db.serialize(() => {
   db.run('DROP TABLE IF EXISTS lorem')
+  db.run('DROP TABLE IF EXISTS users')
   db.run('CREATE TABLE lorem (info TEXT)')
   db.run('CREATE TABLE users (username TEXT)')
   const stmt = db.prepare('INSERT INTO lorem VALUES (?)')
@@ -49,17 +52,22 @@ app.get('/lorem', (req, res) => {
   });
 });
 
-app.get('/post', (req, res) => {
-  console.log(req);
-  const username = req.body.username;
+function addUser(username) {
+    return new Promise((resolve, reject) => {
+        db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    });
+}
 
-  db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
-    if(err)
-      reject(err);
-    else
-      resolve();
-  });
-  res.send({"message": "Success"});
+app.post("/post", async function(req, res) {
+    console.log(req.body)
+    const username = req.body.username;
+    await addUser(username);
+    res.send({"message": "Success"});
 });
 
 // Close the database connection when the server stops
