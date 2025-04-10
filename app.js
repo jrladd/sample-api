@@ -18,6 +18,7 @@ const db = new sqlite3.Database('./db/test.db', (err) => {
 db.serialize(() => {
   db.run('DROP TABLE IF EXISTS lorem')
   db.run('CREATE TABLE lorem (info TEXT)')
+  db.run('CREATE TABLE users (username TEXT)')
   const stmt = db.prepare('INSERT INTO lorem VALUES (?)')
 
   for (let i = 0; i < 10; i++) {
