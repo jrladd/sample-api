@@ -49,6 +49,7 @@ app.get('/lorem', (req, res) => {
 });
 
 app.get('/post', (req, res) => {
+  console.log(req);
   const username = req.body.username;
 
   db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
