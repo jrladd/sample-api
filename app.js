@@ -48,6 +48,19 @@ app.get('/lorem', (req, res) => {
   });
 });
 
+app.get('/post', (req, res) => {
+  const username = req.body.username;
+  const sql = 'SELECT * FROM lorem';
+
+  db.run('INSERT INTO users (username) VALUES (?, ?)', username, (err) => {
+    if(err)
+      reject(err);
+    else
+      resolve();
+  });
+  res.send({"message": "Success"});
+});
+
 // Close the database connection when the server stops
 process.on('SIGINT', () => {
   db.close((err) => {
