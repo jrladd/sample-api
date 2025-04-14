@@ -52,21 +52,13 @@ app.get('/lorem', (req, res) => {
   });
 });
 
-function addUser(username) {
-    return new Promise((resolve, reject) => {
-        db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
-            if(err)
-                reject(err);
-            else
-                resolve();
-        });
-    });
-}
-
 app.post("/post", async function(req, res) {
     console.log(req.body)
     const username = req.body.username;
-    await addUser(username);
+    db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
+      if(err)
+        reject(err);
+    });
     res.send({"message": "Success"});
 });
 
